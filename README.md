@@ -1,7 +1,7 @@
 <h1>Internal Cheats</h1>
 
 ## `✋` IMPORTANT
-> **Warning**: *The code in this repo is is explicitly for educational purposes. I am not responsible for anything that happens when you use this software. *
+> **Warning**: *The code in this repo is explicitly for educational purposes. I am not responsible for anything that happens when you use this software. *
 
 This repository was created to archive and document all of my attempts to learn and develop cheats. This is a beginner friendly guide. 
 
@@ -12,7 +12,46 @@ This repository was created to archive and document all of my attempts to learn 
 ## `📚` PREREQUISITES
 In order to effectively follow this guide, it is necessary to possess prior experience in C++, Assembly and a comprehensive understanding of computer memory concepts.
 
-# Finding offsets 
+# Cheat Engine and Offsets
+Before writing any code, we need to reverse engineer the game. To do so, we will use [Cheat Engine](https://cheatengine.org/). With this tool, we will be able to inspect the game memory and use the disassembler to read the assembly code.
+
+<h2>Finding player pointer</h2>
+For the first step, we will try to find the health of our player. After scanning some values, we get 2 different value. One of them is for the value displayed and the other one is the actual health
+<img width="30%" src="./img/2healthAdressFound.png">
+
+After giving myself some damage in game, I can find which one of those two is the value for my actual health. 
+Now in order to find the pointer to our player, we need to take a look at what is accessing this adress.
+<img width="30%" src="./img/accessAdress.png">
+
+Take some damage in game and you will see a bunch of Assembly code appear on the cheat engine window. 
+
+```c
+0045E3EB - 8B 8B EC000000  - mov ecx,[ebx+000000EC]
+00461628 - FF B7 EC000000  - push [edi+000000EC]
+00484499 - 89 82 EC000000  - mov [edx+000000EC],eax
+00483E8A - 89 81 EC000000  - mov [ecx+000000EC],eax
+```
+In this code, we can see `[ecx+000000EC]`. So it's fine to assume that the offset of the health is 0xEC. We can also assume that the register `ECX` contains the adress of the player. So basically, we are moving `EAX` (new health value) to the adress `ecx+000000EC`.
+
+Another interesting thing is that the value of the register `ECX` is `0x007CDC60` as we can see here: 
+<img width="30%" src="./img/ECX.png">
+
+We will now try to find the static pointer to that adress by scanning for 4 bytes Hexadecimal values. We are also looking for the adress that are in green because it means that they are static adress. (They will be the same even when we restart the game) 
+
+<img width="30%" src="./img/staticAdress.png">
+
+To find which one is the right one, we will have to try them all out. To do so, we can click on `Add Adress Manually` and then `pointers`. Finaly, we can find that the offset to get our local player is `0x195404`.
+
+<h2>Finding entity list</h2>
+To find an entity list (All the other players in the same game as us), we can use the same thing but when we are looking at the disassembler, we will need to search for a line that looks like this 
+
+```c++
+ac_client.exe+81AE6 - 8B 0C B3  - mov ecx,[ebx+esi*4]
+```
+This is the equivalent of a loop where esi would be `i` and `ebx` is the base adress of our list. We do `*4` because an adress is 4 bytes. 
+
+
+# Using offsets 
 Offsets in the context of computer memory refer to the distances between the starting points of different memory locations. 
 Each memory location has a unique address, and the offset represents the difference between the address of a specific memory location and the reference point, often the starting address.
 
@@ -25,11 +64,11 @@ struct player {
     int health; // offset: 0x0
     int shield; // offset: 0x4
     float x;    // offset: 0x8
-    float y;    // offset: 0x12
-    float z;    // offset: 0x16
+    float y;    // offset: 0xC
+    float z;    // offset: 0x10
 }
 
-player* myPlayer{100, 0, 1, 2, 3}; 
+player* myPlayer = new player{100, 0, 1, 2, 3}; 
 ```
 In this example, we have a pointer to a player. In a software like [Cheat Engine](https://cheatengine.org/) we can find the static pointer value which often looks like `ac_client.exe + 0x195404`, where `ac_client.exe` is the base adress of the executable and `0x195404` is the offset to get the local player. You can then simply add the offset to any attribute of the struct to get the value you want. In C++, the code to access the value looks like this: 
 
@@ -72,5 +111,6 @@ struct playerObject {
     }
 };
 ```
+
 
 
