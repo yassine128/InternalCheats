@@ -17,11 +17,11 @@ Before writing any code, we need to reverse engineer the game. To do so, we will
 
 <h2>Finding player pointer</h2>
 For the first step, we will try to find the health of our player. After scanning some values, we get 2 different value. One of them is for the value displayed and the other one is the actual health
-<img width="50%" src="./img/2healthAdressFound.png">
+<img width="" src="./img/2healthAdressFound.png">
 
 After giving myself some damage in game, I can find which one of those two is the value for my actual health. 
 Now in order to find the pointer to our player, we need to take a look at what is accessing this adress.
-<img width="50%" src="./img/accessAdress.png">
+<img width="" src="./img/accessAdress.png">
 
 Take some damage in game and you will see a bunch of Assembly code appear on the cheat engine window. 
 
@@ -34,11 +34,11 @@ Take some damage in game and you will see a bunch of Assembly code appear on the
 In this code, we can see `[ecx+000000EC]`. So it's fine to assume that the offset of the health is 0xEC. We can also assume that the register `ECX` contains the adress of the player. So basically, we are moving `EAX` (new health value) to the adress `ecx+000000EC`.
 
 Another interesting thing is that the value of the register `ECX` is `0x007CDC60` as we can see here: 
-<img width="50%" src="./img/ECX.png">
+<img width="" src="./img/ECX.png">
 
 We will now try to find the static pointer to that adress by scanning for 4 bytes Hexadecimal values. We are also looking for the adress that are in green because it means that they are static adress. (They will be the same even when we restart the game) 
 
-<img width="50%" src="./img/staticAdress.png">
+<img width="" src="./img/staticAdress.png">
 
 To find which one is the right one, we will have to try them all out. To do so, we can click on `Add Adress Manually` and then `pointers`. Finaly, we can find that the offset to get our local player is `0x195404`.
 
