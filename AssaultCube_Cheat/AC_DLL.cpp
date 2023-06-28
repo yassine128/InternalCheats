@@ -11,10 +11,9 @@ std::size_t MaxPlayers;
 playerObject* myPlayer;
 std::vector<playerObject*> listOfPlayers;
 
-// Function to retrieve the base address of the executable
 DWORD_PTR GetExecutableBaseAddress()
 {
-    HMODULE hModule = GetModuleHandleA("ac_client.exe");  // or GetModuleHandleW(NULL) for wide strings
+    HMODULE hModule = GetModuleHandleA("ac_client.exe");  
     return (DWORD_PTR)hModule;
 }
 
@@ -29,9 +28,9 @@ void ClearConsole()
     GetConsoleScreenBufferInfo(consoleHandle, &screenBufferInfo);
     consoleSize = screenBufferInfo.dwSize.X * screenBufferInfo.dwSize.Y;
 
-    // Fill the console with spaces
+    
     FillConsoleOutputCharacter(consoleHandle, ' ', consoleSize, topLeft, &cellsWritten);
-    // Reset the cursor position to the top left
+
     SetConsoleCursorPosition(consoleHandle, topLeft);
 }
 
@@ -86,7 +85,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
 
-        // Paint to off-screen buffer
         HDC hdcMem = hdcBuffer;
         HBITMAP hbmMem = hbmBuffer;
 
@@ -107,7 +105,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                     int hyp = static_cast<int>(std::sqrt(std::pow(distX, 2) + std::pow(distY, 2)));
 
                     int objectAngle = static_cast<int>(std::atan2(distY, distX) * (180.0 / M_PI));
-                    int playerRotation = static_cast<int>(*(myPlayer->viewAngle)); // Assuming the player's view angle is stored as a float or double
+                    int playerRotation = static_cast<int>(*(myPlayer->viewAngle));
                     int relativeAngle = (objectAngle - playerRotation) % 360;
                     if (relativeAngle < 0) {
                         relativeAngle += 360;
@@ -123,7 +121,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         drawRadarSight(hdc); 
         drawPlayer(centerX, centerY, greenColor, hdcMem, 360 - *(myPlayer->viewAngle));
 
-        // Copy the off-screen buffer to the window
         BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, hdcMem, 0, 0, SRCCOPY);
 
         EndPaint(hwnd, &ps);
@@ -156,7 +153,7 @@ void fillList() {
     MaxPlayers = *reinterpret_cast<std::uintptr_t*>(baseAddress + offsets::nPlayers) - 1;
 
     for (int i = 0; i < MaxPlayers; i++) {
-        auto entity = reinterpret_cast<std::uintptr_t*>(((i + 1) * 0x04) + *baseList); // Pointer to the next player
+        auto entity = reinterpret_cast<std::uintptr_t*>(((i + 1) * 0x04) + *baseList); 
         listOfPlayers.push_back(
             new playerObject{
                 reinterpret_cast<int*>(*entity + offsets::pHealth),
@@ -171,7 +168,7 @@ void fillList() {
 
 BOOL radar() {
 
-    *(myPlayer->viewAngle) = 0; // Reset le joueur à 0
+    *(myPlayer->viewAngle) = 0; 
 
     HWND hwnd;
     MSG msg;
@@ -268,15 +265,8 @@ void InfiniteHealth(const HINSTANCE hinstDLL) {
     auto& health = *reinterpret_cast<int*>(pLocalPlayer + offsets::pHealth);
     
     while (!(GetAsyncKeyState('P') & 0x8000)) {
-
-        //std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
-
-        // Execute cheat here
         health = 1000; 
     }
-    
-    // unload DLL 
-    FreeLibraryAndExitThread(hinstDLL, 0);
 }
 
 BOOL WINAPI DllMain(

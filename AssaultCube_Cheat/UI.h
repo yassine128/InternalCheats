@@ -7,9 +7,8 @@ static COLORREF blueColor = RGB(0, 0, 255);
 static COLORREF greenColor = RGB(0, 255, 0);
 
 static inline void drawEnemy(int x, int y, COLORREF color, HDC hdc) {
-    double size = 10; // Length of the base
+    double size = 10; 
 
-    // Create the Square vertices
     POINT vertex1 = { static_cast<LONG>(x), static_cast<LONG>(y) };
     POINT vertex2 = { static_cast<LONG>(x + size), static_cast<LONG>(y) };
     POINT vertex3 = { static_cast<LONG>(x), static_cast<LONG>(y + size) };
@@ -28,7 +27,6 @@ static inline void drawEnemy(int x, int y, COLORREF color, HDC hdc) {
         { vertex3.x, vertex3.y }
     };
 
-    // Draw the triangle
     Polygon(hdc, vertices, sizeof(vertices) / sizeof(vertices[0]));
 
     SelectBrush(hdc, hOldBrush);
@@ -39,7 +37,7 @@ static inline void drawEnemy(int x, int y, COLORREF color, HDC hdc) {
 }
 
 static inline void drawPlayer(int x, int y, COLORREF color, HDC hdc, double angle) {
-    double baseLength = 5; // Length of the base
+    double baseLength = 5; 
 
     int centerX = SCREEN_X / 2; 
     int centerY = SCREEN_Y / 2; 
@@ -61,7 +59,7 @@ static inline void drawPlayer(int x, int y, COLORREF color, HDC hdc, double angl
         { vertex3.x, vertex3.y }
     };
 
-    // Draw the triangle
+    
     Polygon(hdc, vertices, sizeof(vertices) / sizeof(vertices[0]));
 
     SelectBrush(hdc, hOldBrush);
