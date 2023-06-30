@@ -126,7 +126,7 @@ struct playerObject {
 
 Now that we are able to read and modify the game, making an interface becomes easy. To do so you can use [ImGUI](https://github.com/ocornut/imgui), [OpenGL](https://www.opengl.org/) or [Win32 API](https://learn.microsoft.com/en-us/windows/win32/). For my radar, I used Win32. The code for this can be found in UI.h and this is the result. 
 
-![GIF](https://giphy.com/embed/hSjLzueofjE0Net8dZ)
+![GIF](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExd201ZzUya3hlNjNqZ2FzdmdwMHJlYW9kMTlzMDk5M2ZkcjMzNnJhcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hSjLzueofjE0Net8dZ/giphy.gif)
 
 # DLL Injection 
 
