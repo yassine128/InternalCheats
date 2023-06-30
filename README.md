@@ -7,7 +7,6 @@ This repository was created to archive and document all of my attempts to learn 
 
 - `🟢` Infinite Health 
 - `🟢` Radar
-- `🟡` ESP 
 
 ## `📚` PREREQUISITES
 In order to effectively follow this guide, it is necessary to possess prior experience in C++, Assembly and a comprehensive understanding of computer memory concepts.
@@ -16,7 +15,7 @@ In order to effectively follow this guide, it is necessary to possess prior expe
 Before writing any code, we need to reverse engineer the game. To do so, we will use [Cheat Engine](https://cheatengine.org/). With this tool, we will be able to inspect the game memory and use the disassembler to read the assembly code.
 
 <h2>Finding player pointer</h2>
-For the first step, we will try to find the health of our player. After scanning some values, we get 2 different value. One of them is for the value displayed and the other one is the actual health
+For the first step, we will try to find the health of our player. After scanning some values, we get 2 different value. One of them is for the value displayed and the other one is the actual health.
 
 <p align="center" width="100%">
     <img width="" src="./img/2healthAdressFound.png">
@@ -122,6 +121,22 @@ struct playerObject {
     }
 };
 ```
+
+# Radar 
+
+Now that we are able to read and modify the game, making an interface becomes easy. To do so you can use [ImGUI](https://github.com/ocornut/imgui), [OpenGL](https://www.opengl.org/) or [Win32 API](https://learn.microsoft.com/en-us/windows/win32/). For my radar, I used Win32. The code for this can be found in UI.h and this is the result. 
+
+<iframe src="https://giphy.com/embed/hSjLzueofjE0Net8dZ" width="480" height="360" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/hSjLzueofjE0Net8dZ">via GIPHY</a></p>
+
+# DLL Injection 
+
+It's important to know the difference between an Internal and External Cheat. Internal cheats are built into the game or software, exploiting code vulnerabilities to provide advantages. They are complex to develop but offer extensive cheating capabilities. External cheats are separate programs that run alongside the game, modifying memory or input/output. They are easier to develop but more prone to detection.
+
+In games without Anti-Cheat, you can use [Process Hacker](https://processhacker.sourceforge.io/downloads.php) to inject your DLL and it won't get detected. However, most competitive game use strong anti-cheats which makes it really hard to not get detected. 
+
+### Legal 
+This is purely educational content. If you wish to experiment, please do so in offline games or against bots. Do not spoil the experience for other players. This project does not contain any Assault Cube intellectual property and is not affiliated with it in any manner. The original game is necessary and can be obtained from: https://assault.cubers.net/
+
 
 
 
